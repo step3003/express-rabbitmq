@@ -1,0 +1,62 @@
+version: "3.14"
+
+services:
+  producer:
+    build:
+      context: .
+      target: producer
+      dockerfile: docker/Dockerfile
+    ports:
+      - "3001:3001"
+    env_file: producer/.env
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+    volumes:
+      - ./producer:/app
+
+  consumer:
+    build:
+      context: .
+      target: consumer
+      dockerfile: docker/Dockerfile
+    ports:
+      - "3002:3002"
+    env_file: consumer/.env
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+    volumes:
+      - ./consumer:/app
+
+  db:
+    image: postgres:13.2-alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: node
+    ports:
+      - "5433:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq:3.10.7-management
+    restart: always
+    hostname: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=rmuser
+      - RABBITMQ_DEFAULT_PASS=rmpassword
+      - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit log_levels [{connection,error},{default,error}]  disk_free_limit 2147483648
+    volumes:
+      - ./rabbitmq:/var/lib/rabbitmq
+    ports:
+      - 15672:15672
+      - 5672:5672
+
+volumes:
+  db:
