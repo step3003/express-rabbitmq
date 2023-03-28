@@ -1,5 +1,5 @@
 import express, {Request, request, Response} from "express";
-import Producer, {Message} from '../rabbitmq/rabbitmq.producer'
+import Producer, {Message} from '../rabbit/rabbitmq.producer'
 import * as console from "console";
 
 export const send = async (request: Request, response: Response) => {

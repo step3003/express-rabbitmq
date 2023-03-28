@@ -12,5 +12,5 @@
 #.pnp.*
 .env
 dist
-rabbitmq
+/rabbitmq
 db

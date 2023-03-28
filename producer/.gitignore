@@ -12,6 +12,4 @@
 .yarn
 .env
 dist
-rabbitmq
-db
 /node_modules
